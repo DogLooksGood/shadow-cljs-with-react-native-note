@@ -9,20 +9,20 @@ Also we have a ~REPL~ :)
 
 Followings is the steps to make they work.
 Currently, this is not a good solution, the steps are complex.
-But if all this work can be done with `shadow-cljs` automatically, that will be awesome.
+But if all this work can be done with ~shadow-cljs~ automatically, that will be awesome.
 
 * How
-1. Install ~react-native~ command-line tools with ~npm i -g react-native-cli~.
+Install ~react-native~ command-line tools with ~npm i -g react-native-cli~.
 
-2. Install ~shadow-cljs~ command-line tools with ~npm i -g shadow-cljs~.
+Install ~shadow-cljs~ command-line tools with ~npm i -g shadow-cljs~.
 
-3. create the project with ~react-native init Hello~.
+create the project with ~react-native init Hello~.
 
-4. ~cd Hello~.
+~cd Hello~.
 
-5. Initialize a shadow-cljs config file with ~shadow-cljs init~.
+Initialize a shadow-cljs config file with ~shadow-cljs init~.
 
-6. edit ~shadow-cljs.edn~.
+edit ~shadow-cljs.edn~.
 
 #+BEGIN_SRC clojure
   {:source-paths
@@ -38,7 +38,7 @@ But if all this work can be done with `shadow-cljs` automatically, that will be 
           :devtools {:devtools-url "http://<host-ip>:9630"}}}}  ;; This will let client connect our machine, so that we can have a repl.
 #+END_SRC
 
-7. create a cljs file, ~src/hello/core.cljs~.
+create a cljs file, ~src/hello/core.cljs~.
 
 #+BEGIN_SRC clojure
   (ns hello.core)
@@ -47,26 +47,26 @@ But if all this work can be done with `shadow-cljs` automatically, that will be 
     (js/alert "Hello from CLJS!"))
 #+END_SRC
 
-8. start repl client in ~index.cljs~.
+start repl client in ~index.cljs~.
 
 #+BEGIN_SRC javascript
   import './js/shadow.cljs.devtools.client.browser';
 #+END_SRC
 
-9. Using ~foo~ will like this:
+Using ~foo~ will like this:
 #+BEGIN_SRC javascript
   import { foo } from './js/hello.core';
 
   foo();
 #+END_SRC
 
-10. Start ~shadow-cljs~, I use ~shadow-cljs clj-repl~. Then we can start the build:
+Start ~shadow-cljs~, I use ~shadow-cljs clj-repl~. Then we can start the build:
 #+BEGIN_SRC clojure
   shadow.user => (shadow/watch :app)
   shadow.user => (shadow/repl :app)
 #+END_SRC
 
-11. ~react-native run-ios~!
+~react-native run-ios~!
 
 At end, after client loaded, you will see an error for ~document~ is not defined.
 since ~shadow-cljs~ support [[https://shadow-cljs.github.io/docs/UsersGuide.html#_patching_libraries][A good way to hack]], we can fix like this:
