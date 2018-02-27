@@ -7,6 +7,8 @@ Comparing to [[https://github.com/drapanjanas/re-natal][re-natal]] or [[https://
 It's faster and don't need heavy shim work. e.g. [[https://github.com/drapanjanas/re-natal/blob/master/resources/figwheel-bridge.js][figwheel-bridge.js]].
 Also we have a ~REPL~ :)
 
+Source map seems still not work.
+
 Followings is the steps to make they work.
 Currently, this is not a good solution, the steps are complex.
 But if all this work can be done with ~shadow-cljs~ automatically, that will be awesome.
@@ -81,4 +83,4 @@ we edit this file, modify ~script-eval~ function to
     [code])
 #+END_SRC
 
-Now everything should works.
+Now you try on REPL and HMR.
