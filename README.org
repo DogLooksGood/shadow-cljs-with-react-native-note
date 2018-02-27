@@ -1,0 +1,84 @@
+#+TITLE: Use shadow-cljs with React Native
+
+
+* Brief
+Thanks to [[https://github.com/thheller][@thheller]] (author of [[https://github.com/thheller/shadow-cljs][shadow-cljs]]), just got it to work with [[https://github.com/facebook/react-native][React Native]].
+Comparing to [[https://github.com/drapanjanas/re-natal][re-natal]] or [[https://github.com/seantempesta/expo-cljs-template][expo-cljs-template]], we now can use the built-in ~HMR~.
+It's faster and don't need heavy shim work. e.g. [[https://github.com/drapanjanas/re-natal/blob/master/resources/figwheel-bridge.js][figwheel-bridge.js]].
+Also we have a ~REPL~ :)
+
+Followings is the steps to make they work.
+Currently, this is not a good solution, the steps are complex.
+But if all this work can be done with `shadow-cljs` automatically, that will be awesome.
+
+* How
+1. Install ~react-native~ command-line tools with ~npm i -g react-native-cli~.
+
+2. Install ~shadow-cljs~ command-line tools with ~npm i -g shadow-cljs~.
+
+3. create the project with ~react-native init Hello~.
+
+4. ~cd Hello~.
+
+5. Initialize a shadow-cljs config file with ~shadow-cljs init~.
+
+6. edit ~shadow-cljs.edn~.
+
+#+BEGIN_SRC clojure
+  {:source-paths
+   ["src"]
+
+   :dependencies
+   []
+
+   :builds
+   {:app {:target :npm-module
+          :output-dir "js/"
+          :runtime :browser
+          :devtools {:devtools-url "http://<host-ip>:9630"}}}}  ;; This will let client connect our machine, so that we can have a repl.
+#+END_SRC
+
+7. create a cljs file, ~src/hello/core.cljs~.
+
+#+BEGIN_SRC clojure
+  (ns hello.core)
+
+  (defn foo []
+    (js/alert "Hello from CLJS!"))
+#+END_SRC
+
+8. start repl client in ~index.cljs~.
+
+#+BEGIN_SRC javascript
+  import './js/shadow.cljs.devtools.client.browser';
+#+END_SRC
+
+9. Using ~foo~ will like this:
+#+BEGIN_SRC javascript
+  import { foo } from './js/hello.core';
+
+  foo();
+#+END_SRC
+
+10. Start ~shadow-cljs~, I use ~shadow-cljs clj-repl~. Then we can start the build:
+#+BEGIN_SRC clojure
+  shadow.user => (shadow/watch :app)
+  shadow.user => (shadow/repl :app)
+#+END_SRC
+
+11. ~react-native run-ios~!
+
+At end, after client loaded, you will see an error for ~document~ is not defined.
+since ~shadow-cljs~ support [[https://shadow-cljs.github.io/docs/UsersGuide.html#_patching_libraries][A good way to hack]], we can fix like this:
+#+BEGIN_SRC shell
+  mkdir -p src/shadow/cljs/devtools/client
+
+  wget https://github.com/thheller/shadow-cljs/blob/master/src/main/shadow/cljs/devtools/client/browser.cljs src/shadow/cljs/devtools/client/browser.cljs
+#+END_SRC
+we edit this file, modify ~script-eval~ function to
+#+BEGIN_SRC clojure
+  (defn script-eval
+    [code])
+#+END_SRC
+
+Now everything should works.
